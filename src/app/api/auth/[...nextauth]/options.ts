@@ -54,4 +54,25 @@ export const nextAuthOptions : NextAuthOptions  = {
         strategy : "jwt"
     },
     secret : process.env.NEXTAUTH_SECRET,
+    callbacks :  {
+        async jwt({ token, user, account, profile, isNewUser }){
+            if(user){
+                token._id = user._id?.toString();
+                token.isVerified  = user.isVerified;
+                token.isAcceptingMessages = user.isAcceptingMessages;
+                token.username = user.username
+            }
+            return token
+          },
+        async session({ session, user, token }) {
+            if(token){
+                session._id = user._id?.toString();
+                session.isVerified  = user.isVerified;
+                session.isAcceptingMessages = user.isAcceptingMessages;
+                session.username = user.username 
+            }
+            return session
+          }
+    }
+    
 }
